@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cjava="http://www.haoyu.com/schema/cjava"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.haoyu.com/schema/cjava
+        http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
+		"
+	default-lazy-init="false">
+
+	
+	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
+	
+	<cjava:templateContainer/>
+	<cjava:optManager class="com.haoyu.module.jcstruct.opt.OptManagerForDebug">
+	<cjava:optManagerOne key="bytearray" value-ref="byteArrayJFieldOpt"/>
+	</cjava:optManager>
+	<cjava:dispatchCenterService/>
+	<cjava:refreshManager/>
+	
+	
+	<context:component-scan base-package="com.haoyu.module.jcstruct.test" />
+	
+	<context:component-scan base-package="com.haoyu.module.jcstruct.resolve" />
+	
+	
+	
+	<cjava:check/>
+
+    <import resource="spring-cjava-fc.xml"/>
+    <import resource="spring-cjava-tc.xml"/>
+	
+</beans>

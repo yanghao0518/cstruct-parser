@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<xsd:schema xmlns="http://www.haoyu.com/schema/cjava"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.haoyu.com/schema/cjava"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+	<xsd:element name="tct">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element ref="field" />
+					<xsd:element ref="fieldGroup" />
+					<xsd:element ref="branchs" maxOccurs="1" />
+				</xsd:choice>
+			</xsd:sequence>
+			<xsd:attributeGroup ref="ctAttr" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="fct">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element ref="field" />
+					<xsd:element ref="fieldGroup" />
+					<xsd:element ref="branchs" maxOccurs="1"/>
+				</xsd:choice>
+			</xsd:sequence>
+			<xsd:attributeGroup ref="ctAttr" />
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="fch">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="field" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="fieldHeaderAttr" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="tch">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="field" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="fieldHeaderAttr" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="optManager">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="optManagerOne" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="optManagerAttr" />
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="check">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" default="bcc" />
+			<xsd:attribute name="class" type="xsd:string" default="com.haoyu.module.jcstruct.check.DefaultCJavaCheckImpl" />
+			<xsd:attribute name="id" type="xsd:string" default="bcc"/>
+			<xsd:attribute name="desc" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:attributeGroup name="branchAttr">
+		<xsd:attribute name="keyValue" type="xsd:string" use="required" />
+		<xsd:attribute name="desc" type="xsd:string" />
+	</xsd:attributeGroup>
+	
+	<xsd:element name="branch">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="field" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="branchAttr" />
+		</xsd:complexType>
+	</xsd:element>
+	
+
+	<xsd:element name="branchs">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="branch" />
+			</xsd:sequence>
+			<xsd:attribute name="key" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:attributeGroup name="fieldGroupAttr">
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="desc" type="xsd:string" />
+	</xsd:attributeGroup>
+
+	<xsd:element name="fieldGroup">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="field" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="fieldGroupAttr" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="field">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="required"></xsd:attribute>
+			<xsd:attribute name="defaultValue" type="xsd:string"></xsd:attribute>
+			<xsd:attribute name="desc" type="xsd:string" />
+			<xsd:attribute name="realValueRule" type="xsd:string" />
+			<xsd:attribute name="realLengthRule" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:attributeGroup name="ctAttr">
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="id" type="xsd:string" use="required" />
+		<xsd:attribute name="desc" type="xsd:string" />
+		<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.DefaultTemplate" />
+	</xsd:attributeGroup>
+
+	<xsd:attributeGroup name="fieldHeaderAttr">
+		<xsd:attribute name="key" type="xsd:string" use="required" />
+		<xsd:attribute name="id" type="xsd:string" />
+		<xsd:attribute name="name" type="xsd:string" />
+		<xsd:attribute name="desc" type="xsd:string" />
+		<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.DefaultHeader" />
+	</xsd:attributeGroup>
+	
+	<xsd:element name="templateContainer">
+		<xsd:complexType>
+			<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.template.DefaultTemplateContainer" />
+			<xsd:attribute name="desc" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="dispatchCenterService">
+		<xsd:complexType>
+			<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.dispatch.DefaultDispatchCenterServiceImpl" />
+			<xsd:attribute name="desc" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="refreshManager">
+		<xsd:complexType>
+			<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.refresh.RefreshServiceManager" />
+			<xsd:attribute name="desc" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="optManagerOne">
+		<xsd:complexType>
+			<xsd:attribute name="class" type="xsd:string"/>
+			<xsd:attribute name="key" type="xsd:string"  use="required"/>
+			<xsd:attribute name="value-ref" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:attributeGroup name="optManagerAttr">
+		<xsd:attribute name="desc" type="xsd:string" />
+		<xsd:attribute name="class" type="xsd:string"
+			default="com.haoyu.module.jcstruct.opt.DefaultOptManager" />
+	</xsd:attributeGroup>
+
+</xsd:schema>

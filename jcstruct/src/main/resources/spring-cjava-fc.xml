@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cjava="http://www.haoyu.com/schema/cjava"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.haoyu.com/schema/cjava
+        http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
+		"
+	default-lazy-init="false">
+	
+    <!-- 接收C结构体协议配置 -->
+	<cjava:fch key="Package_Type">
+		<cjava:field name="Constant_Up" type="ushort" desc="2字节，前导字符，固定为0XAAAA，表示为上行数据包-" />
+		<cjava:field name="Gateway_Id" type="unsigendint" desc="4字节，网关id号" />
+		<cjava:field name="Package_Type" type="char" desc="具体根据每个协议ID决定" />
+	</cjava:fch>
+	
+	
+	<cjava:fct name="ACK" id="1" desc="通讯确认协议号0x01">
+		<cjava:field name="Version" type="char" desc="1字节,网关软件版本  " />
+		<cjava:field name="Package_length" type="ushort" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" desc="
+		 =0x01,表示传感节点测试通信 
+		=0x02，数据接收正确
+		=0x03，数据接收错误，要求重发
+        =0x04，数据接收错误，不要求重发
+        =0X05，终止传输（多包传输时使用）。
+        =0X06，接收正确，命令无法执行。"/>
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort" desc="2字节，固定为0XAA55，表示为上行数据包结束 " />
+	</cjava:fct>
+	
+	<cjava:fct name="HeartBeat" id="5" desc="心跳 协议号0x05">
+	    <cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+	    <cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort" desc="2字节，固定为0XAA55，表示为上行数据包结束 " />
+	</cjava:fct>
+	
+	<cjava:fct name="Character" id="2" desc="特征值  0x02">
+	
+	    <cjava:field name="Sensor_Id" type="unsigendint" desc="4字节，传感器ID  " />
+		<cjava:field name="Version" type="char" desc="1字节,网关软件版本  " />
+		<cjava:field name="Package_length" type="ushort" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" desc="
+		 1字节，=0x01,表示传感器霍尔触发上传数据=0x02，表示传感器定时上传数据"/>
+		 
+		 
+		 <cjava:field name="Recver_Riss" type="char" desc="接收到这包数据的场强 " />
+		 <cjava:field name="Battery" type="char" desc="电池电量,百分数  " />
+		 <cjava:field name="Temperature" type="short" realValueRule="{*}{0.01}" desc="2字节，温度值,真实值等于该值*0.01" />
+		 <cjava:field name="Character_Attribute" type="char" desc="1字节，数据类型，即后面一组数据的类型。1加速度 2速度  " />
+		 <cjava:field name="Data_coefficient" type="ushort" desc="系数, 计算方法见5.11中Data_ coefficient字段  " />
+		 
+ 		 <cjava:field name="Data_x_Rms" type="ushort" desc="2字节，x方向RMS值 " />
+ 		 <cjava:field name="Data_x_PP" type="ushort" desc="2字节，x方向峰峰值" />
+ 		 <cjava:field name="Data_x_P" type="ushort" desc="2字节，x方向峰值 " />
+ 		 
+ 		 <cjava:field name="Data_y_Rms" type="ushort" desc="2字节，y方向RMS值 " />
+ 		 <cjava:field name="Data_y_PP" type="ushort" desc="2字节，y方向峰峰值" />
+ 		 <cjava:field name="Data_y_P" type="ushort" desc="2字节，y方向峰值 " />
+ 		 
+ 		 
+ 		 <cjava:field name="Data_z_Rms" type="ushort" desc="2字节，z方向RMS值 " />
+ 		 <cjava:field name="Data_z_PP" type="ushort" desc="2字节，z方向峰峰值" />
+ 		 <cjava:field name="Data_z_P" type="ushort" desc="2字节，z方向峰值 " />
+		 
+ 
+		 
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort" desc="2字节，固定为0XAA55，表示为上行数据包结束 " />
+		
+	</cjava:fct>
+	
+	<cjava:fct name="Sensor" id="3" desc="传感器组网信息上传（0X03">
+	    <cjava:field name="Sensor_Id" type="unsigendint" desc="4字节，传感器ID  " />
+		<cjava:field name="Version" type="char" desc="1字节,网关软件版本  " />
+		<cjava:field name="Package_length" type="ushort" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="2字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" desc="
+		1字节，=0x01,表示传感器霍尔触发上传数据=0x02，表示传感器定时上传数据"/>
+		
+		<cjava:field name="Recver_Riss" type="char" desc="接收到这包数据的场强 " />
+		
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort" desc="2字节，固定为0XAA55，表示为上行数据包结束 " />
+	</cjava:fct>
+	
+	<cjava:fct name="Wave" id="4" desc="波形数据 ">
+	    <cjava:field name="Sensor_Id" type="unsigendint" desc="4字节，传感器ID  " />
+		<cjava:field name="Version" type="char" desc="1字节,网关软件版本  " />
+		<cjava:field name="Package_length" type="ushort" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="2字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" desc="
+		1字节，命令属性为0X04，表示传感节点申请波形上传
+		1字节，命令属性为0X05，表示中间包
+		1字节，命令属性为0X06，表示结束包
+		"/>
+		
+		
+		<cjava:branchs key="command_properties">
+		
+			<cjava:branch keyValue="4" desc="表示传感节点申请波形上传">
+				<cjava:field name="Wave_attribute" type="char" desc="当前数据属性" />
+				<cjava:field name="Wave_long" type="char" desc="波形长度=0  512点  =1  1024点 =2 	2048点	=3	4096点 =4	8192点" />
+				<cjava:field name="Temperature" type="short" realValueRule="{*}{0.01}" desc="真实值等于该值*0.01" />
+				<cjava:field name="Sample_Frequency" type="ushort"  desc="采样频率 " />
+				<cjava:field name="Wave_coefficient" type="ushort"  desc="后续发送值*系数/100得到真实值 " />
+			</cjava:branch>
+			
+			<cjava:branch keyValue="5" desc="波形结束包数据 ">
+				<cjava:field name="Wave_data" type="bytearray" realLengthRule="{Package_length}{-}{6}" desc="1024个数据，每包1024个数据，最后一包按实际剩余数据量 " />
+			</cjava:branch>
+			
+			<cjava:branch keyValue="6" desc="波形结束包数据 ">
+			</cjava:branch>
+			
+		</cjava:branchs>
+
+		
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort" desc="2字节，固定为0XAA55，表示为上行数据包结束 " />
+	</cjava:fct>
+	
+	
+	
+</beans>
+
+		

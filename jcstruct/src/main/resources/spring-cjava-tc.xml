@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cjava="http://www.haoyu.com/schema/cjava"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.haoyu.com/schema/cjava
+        http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
+		"
+	default-lazy-init="false">
+	
+     <!-- 发送给C结构体协议配置 -->
+	<cjava:tch key="Package_Type">
+		<cjava:field name="Constant_Down" type="ushort" defaultValue="21845" desc="2字节，前导字符，固定为0X5555，表示为上行数据包" />
+		<cjava:field name="Gateway_Id" type="unsigendint" desc="4字节，网关id号" />
+	</cjava:tch>
+	
+	<!-- 确认 -->
+	<cjava:tct name="ACK" id="1" desc="通讯确认协议号0x01">
+	    <cjava:field name="Package_Type" type="char" defaultValue="1" desc="1字节，协议号=0x01" />
+		<cjava:field name="Package_length" type="ushort" defaultValue="6" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" desc="
+		 =0x01,表示传感节点测试通信
+         =0x02，数据接收正确
+         =0x03，数据接收错误，要求重发
+         =0x04，数据接收错误，不要求重发
+         =0X05，终止传输（多包传输时使用）。
+         =0X06，接收正确，命令无法执行。
+        "/>
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort"  defaultValue="21930" desc="2字节，固定为0X55AA，表示为上行数据包结束 " />
+	</cjava:tct>
+	
+	<!-- 删除网关内传感器节点（0x08)-->
+	<cjava:tct name="Delete_Sensor" id="8" desc="删除网关内传感器节点0x08">
+	
+	    <cjava:field name="Package_Type" type="char" defaultValue="8" desc="1字节，删除网关内传感器节点0x08" />
+	    
+		<cjava:field name="Package_length" type="ushort" defaultValue="10" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		
+		<cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+		
+		<cjava:field name="command_properties" type="char" defaultValue="1" desc="=0x01,删除网关管辖的传感器"/>
+		
+		<cjava:field name="Sensor_id" type="unsigendint"  desc="4字节，传感器id，id=0XFFFFFFFF表示删除所有传感器"/>
+		
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		
+		<cjava:field name="Constant_Up_Stop" type="ushort"  defaultValue="21930" desc="2字节，固定为0X55AA，表示为上行数据包结束 " />
+	</cjava:tct>
+	
+	
+	<!-- 传感器设置下发给网关  -->
+	<cjava:tct name="Server_Gateway" id="6" desc="传感器设置下发给网关0x06">
+	    <cjava:field name="Package_Type" type="char" defaultValue="6" desc="1字节，协议号=0x06" />
+		<cjava:field name="Package_length" type="ushort" defaultValue="93" desc="2字节数据包长度，单位字节，从Package_length（包含）至BCC（包含） " />
+		<cjava:field name="Package_Number" type="ushort" desc="字节，包序号，copy接收到的上行数据包包序号 " />
+		<cjava:field name="command_properties" type="char" defaultValue="0" desc="1字节，保留 "/>
+		<cjava:field name="Sensor_Id" type="unsigendint"  desc="4字节，传感器ID"/>
+		
+		<cjava:field name="HP_Filter" type="char" defaultValue="2" desc="=0	无高通滤波     =1	3HZ高通滤波    =2 10HZ高通滤波"/>
+		
+		<cjava:field name="X_Angle" type="char" defaultValue="0" desc="1字节,传感器X方向安装角度，单位度。默认0度"/>
+		
+		<cjava:field name="Sample_Character_Time" type="char" defaultValue="4" desc="
+		数据采集间隔，报警状态未变不上传，报警状态变化则上传（含波形） 默认30分钟
+		=0	
+		=1	1分钟
+		=2	5分钟
+		=3	10分钟
+		=4	30分钟
+		=5	1小时
+		=6	2小时
+		=7	6小时
+		=8	12小时
+		=9	1天
+		=10	2天
+		"/>
+		
+		<cjava:field name="Upload_Character_Time" type="char" defaultValue="6" desc="
+		特征值上传间隔，时间到时由Upload_Sensor_Type上传类型	默认2个小时
+		=0	
+		=1	1分钟
+		=2	5分钟
+		=3	10分钟
+		=4	30分钟
+		=5	1小时
+		=6	2小时
+		=7	6小时
+		=8	12小时
+		=9	1天
+		=10	2天
+		"/>
+		
+		<cjava:field name="Upload_Wave_Time" type="char" defaultValue="9" desc="
+		波形上传间隔，时间到后再由Upload_Type决定上传数据类型 默认1天
+		=0	
+		=1	1分钟
+		=2	5分钟
+		=3	10分钟
+		=4	30分钟
+		=5	1小时
+		=6	2小时
+		=7	6小时
+		=8	12小时
+		=9	1天
+		=10	2天
+		"/>
+		
+		<cjava:field name="Wave_long" type="char" defaultValue="1" desc="
+		1字节，波形长度 默认1024个点
+		=0  512点  
+		=1  1024点
+		=2  2048点	
+		=3	4096点
+		=4	8192点
+		"/>
+		
+		<cjava:field name="Sample_Frequency" type="ushort" defaultValue="200" desc="
+		2字节，采样频率 sps 默认200
+		"/>
+		
+		<cjava:field name="Upload_Sensor_Type" type="char" defaultValue="9" desc="
+		 1字节，传感器是否工作 默认  1 0 0 1
+		bit 0
+		=0 	振动不启动，若bit=1０，则bit2、3、4无意义。
+		=1  振动启动
+		bit 1
+		=0 	直流特征值不上传
+		=1  直流特征值上传
+		bit 2
+		=0 	加速度特征值不上传
+		=1  加速度特征值上传
+		bit 3
+		=0 	速度特征值不上传
+		=1  速度特征值上传
+		"/>
+		
+		<cjava:field name="Upload_Wave_Type" type="ushort" defaultValue="113" desc="
+		2字节，上传波形类型。该字段有效必须首先Upload_Sensor_Type	对应有效。 默认 00000000 01110001				
+		                    =0	=1
+		Bit0	是否上传波形	全不传	由其他位决定  default 1
+		Bit1	加速度x波形	N	Y   default 0
+		Bit2	加速度y波形	N	Y   default 0
+		Bit3	加速度z波形	N	Y   default 0
+		Bit4	速度x波形	    N	Y   default 1
+		Bit5	速度y波形	    N	Y   default 1
+		Bit6	速度z波形	    N	Y   default 1
+		"/>
+		
+		<cjava:field name="Temperature_alarm_diff" type="short" defaultValue="35"  realValueRule="{*}{100}"  desc="
+		和环境温度差报警,*0.01得到实际值,温差默认35，环境温度默认0XFFFF，表示该值无效，不报警，环境温度由4.2.2协议下传。
+		"/>
+		
+		<cjava:field name="Temperature_alarm_HH" type="short" defaultValue="80"  realValueRule="{*}{100}"  desc="
+		温度高高报警值，*0.01得到实际值,默认80度
+		"/>
+		
+		<cjava:field name="Temperature_alarm_H" type="short" defaultValue="60"  realValueRule="{*}{100}"  desc="
+		温度高报警值，*0.01得到实际值%暂不做,默认60度
+		"/>
+		
+		<cjava:field name="Temperature_alarm_Change" type="short" defaultValue="5"  realValueRule="{*}{100}"  desc="
+		温度变化量报警值，和上一次Change报警比较*0.01得到实际值,默认5度
+		"/>
+		
+		<cjava:field name="Temperature_alarm_L" type="short" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		温度低报警值，*0.01得到实际值，%暂不做,默认0度
+		"/>
+		
+		<cjava:field name="Temperature_alarm_LL" type="short" defaultValue="-20"  realValueRule="{*}{100}"  desc="
+		温度低低报警值，*0.01得到实际值%暂不做。默认-20度
+		"/>
+		
+		<cjava:field name="Acc_X_alarm_HH" type="ushort" defaultValue="1"  realValueRule="{*}{100}"  desc="
+		加速度x方向高高报警值，乘以该值/100得到真实值,默认1
+		"/>
+		
+		<cjava:field name="Acc_X_alarm_H" type="ushort" defaultValue="0.8"  realValueRule="{*}{100}"  desc="
+		加速度x方向高报警值，默认0.8
+		"/>
+		
+		<cjava:field name="Acc_X_alarm_Change" type="ushort" defaultValue="0.3"  realValueRule="{*}{100}"  desc="
+		加速度x方向变化量报警值，和上一次Change报警比较%不做 默认0.3
+		"/>
+		
+		<cjava:field name="Acc_X_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度x方向低报警值，乘以该值/100得到真实值%暂不做 默认0
+		"/>
+		
+		<cjava:field name="Acc_X_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度x方向低低报警值，%暂不做 /默认0 
+		"/>
+		
+		
+		<cjava:field name="Acc_Y_alarm_HH" type="ushort" defaultValue="1"  realValueRule="{*}{100}"  desc="
+		加速度y方向高高报警值，乘以该值/100得到真实值,默认1
+		"/>
+		
+		<cjava:field name="Acc_Y_alarm_H" type="ushort" defaultValue="0.8"  realValueRule="{*}{100}"  desc="
+		加速度y方向高报警值，默认0.8
+		"/>
+		
+		<cjava:field name="Acc_Y_alarm_Change" type="ushort" defaultValue="0.3"  realValueRule="{*}{100}"  desc="
+		加速度y方向变化量报警值，和上一次Change报警比较%不做 默认0.3
+		"/>
+		
+		<cjava:field name="Acc_Y_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度y方向低报警值，乘以该值/100得到真实值%暂不做 默认0
+		"/>
+		
+		<cjava:field name="Acc_Y_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度y方向低低报警值，%暂不做 /默认0 
+		"/>
+		
+		
+		<cjava:field name="Acc_Z_alarm_HH" type="ushort" defaultValue="1"  realValueRule="{*}{100}"  desc="
+		加速度z方向高高报警值，乘以该值/100得到真实值,默认1
+		"/>
+		
+		<cjava:field name="Acc_Z_alarm_H" type="ushort" defaultValue="0.8"  realValueRule="{*}{100}"  desc="
+		加速度z方向高报警值，默认0.8
+		"/>
+		
+		<cjava:field name="Acc_Z_alarm_Change" type="ushort" defaultValue="0.3"  realValueRule="{*}{100}"  desc="
+		加速度z方向变化量报警值，和上一次Change报警比较%不做 默认0.3
+		"/>
+		
+		<cjava:field name="Acc_Z_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度z方向低报警值，乘以该值/100得到真实值%暂不做 默认0
+		"/>
+		
+		<cjava:field name="Acc_Z_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		加速度z方向低低报警值，%暂不做 /默认0 
+		"/>
+		
+		
+		<cjava:field name="Speed_X_alarm_HH" type="ushort" defaultValue="7.1"  realValueRule="{*}{100}"  desc="
+		速度x方向高高报警值，乘以该值/100得到真实值 /默认7.1
+		"/>
+		
+		<cjava:field name="Speed_X_alarm_H" type="ushort" defaultValue="2.8"  realValueRule="{*}{100}"  desc="
+		速度x方向高报警值 默认2.8
+		"/>
+		
+		<cjava:field name="Speed_X_alarm_Change" type="ushort" defaultValue="0.5"  realValueRule="{*}{100}"  desc="
+		速度x方向变化量报警值，和上一次Change报警比较%不做  /默认0.5
+		"/>
+		
+		<cjava:field name="Speed_X_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度x方向低报警值，乘以该值/100得到真实值%暂不做  /默认0
+		"/>
+		
+		<cjava:field name="Speed_X_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度x方向低低报警值，%暂不做  /默认0
+		"/>
+		
+		
+		
+		<cjava:field name="Speed_Y_alarm_HH" type="ushort" defaultValue="7.1"  realValueRule="{*}{100}"  desc="
+		速度y方向高高报警值，乘以该值/100得到真实值 /默认7.1
+		"/>
+		
+		<cjava:field name="Speed_Y_alarm_H" type="ushort" defaultValue="2.8"  realValueRule="{*}{100}"  desc="
+		速度y方向高报警值 默认2.8
+		"/>
+		
+		<cjava:field name="Speed_Y_alarm_Change" type="ushort" defaultValue="0.5"  realValueRule="{*}{100}"  desc="
+		速度y方向变化量报警值，和上一次Change报警比较%不做  /默认0.5
+		"/>
+		
+		<cjava:field name="Speed_Y_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度y方向低报警值，乘以该值/100得到真实值%暂不做  /默认0
+		"/>
+		
+		<cjava:field name="Speed_Y_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度y方向低低报警值，%暂不做  /默认0
+		"/>
+		
+		
+		<cjava:field name="Speed_Z_alarm_HH" type="ushort" defaultValue="7.1"  realValueRule="{*}{100}"  desc="
+		速度z方向高高报警值，乘以该值/100得到真实值 /默认7.1
+		"/>
+		
+		<cjava:field name="Speed_Z_alarm_H" type="ushort" defaultValue="2.8"  realValueRule="{*}{100}"  desc="
+		速度z方向高报警值 默认2.8
+		"/>
+		
+		<cjava:field name="Speed_Z_alarm_Change" type="ushort" defaultValue="0.5"  realValueRule="{*}{100}"  desc="
+		速度z方向变化量报警值，和上一次Change报警比较%不做  /默认0.5
+		"/>
+		
+		<cjava:field name="Speed_Z_alarm_L" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度z方向低报警值，乘以该值/100得到真实值%暂不做  /默认0
+		"/>
+		
+		<cjava:field name="Speed_Z_alarm_LL" type="ushort" defaultValue="0"  realValueRule="{*}{100}"  desc="
+		速度z方向低低报警值，%暂不做  /默认0
+		"/>
+  	
+		<cjava:field name="BCC" type="char" desc="1个字节，前面所有数据含前导，异或运算 " />
+		<cjava:field name="Constant_Up_Stop" type="ushort"  defaultValue="21930" desc="2字节，固定为0X55AA，表示为上行数据包结束 " />
+	</cjava:tct>
+	
+	
+</beans>
